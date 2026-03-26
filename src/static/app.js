@@ -519,6 +519,14 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    // Build social sharing URLs for this activity
+    const shareText = encodeURIComponent(`Check out ${name} at Mergington High School! ${details.description}`);
+    const activityAnchor = encodeURIComponent(name.toLowerCase().replace(/\s+/g, "-"));
+    const shareUrl = encodeURIComponent(`${window.location.href.split("#")[0]}#${activityAnchor}`);
+    const twitterUrl = `https://x.com/intent/tweet?text=${shareText}&url=${shareUrl}`;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&quote=${shareText}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}`;
+
     activityCard.innerHTML = `
       ${tagHtml}
       <h4>${name}</h4>
@@ -568,6 +576,12 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `
         }
+      </div>
+      <div class="share-activity">
+        <span class="share-label">Share:</span>
+        <a class="share-button share-twitter" href="${twitterUrl}" target="_blank" rel="noopener noreferrer" title="Share on X (Twitter)" aria-label="Share on X (Twitter)">𝕏</a>
+        <a class="share-button share-facebook" href="${facebookUrl}" target="_blank" rel="noopener noreferrer" title="Share on Facebook" aria-label="Share on Facebook">f</a>
+        <a class="share-button share-whatsapp" href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" title="Share on WhatsApp" aria-label="Share on WhatsApp">&#x1F4AC;</a>
       </div>
     `;
 
