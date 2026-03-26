@@ -519,6 +519,20 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    // Create social sharing buttons
+    const shareText = `Check out ${name} at Mergington High School!\n${details.description}\nSchedule: ${formattedSchedule}`;
+    const shareUrl = window.location.href;
+    const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText + "\n" + shareUrl)}`;
+    const whatsappShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + "\n" + shareUrl)}`;
+    const shareButtonsHtml = `
+      <div class="share-buttons">
+        <span class="share-label">Share:</span>
+        <a class="share-btn share-twitter" href="${twitterShareUrl}" target="_blank" rel="noopener noreferrer" title="Share on X (Twitter)">𝕏</a>
+        <a class="share-btn share-whatsapp" href="${whatsappShareUrl}" target="_blank" rel="noopener noreferrer" title="Share on WhatsApp">💬</a>
+        <button class="share-btn share-copy" title="Copy to clipboard">🔗</button>
+      </div>
+    `;
+
     activityCard.innerHTML = `
       ${tagHtml}
       <h4>${name}</h4>
@@ -568,6 +582,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `
         }
+        ${shareButtonsHtml}
       </div>
     `;
 
@@ -586,6 +601,26 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    // Add click handler for copy link button
+    const copyButton = activityCard.querySelector(".share-copy");
+    copyButton.addEventListener("click", () => {
+      const copyText = shareText + "\n" + shareUrl;
+      navigator.clipboard.writeText(copyText).then(() => {
+        copyButton.textContent = "✓";
+        setTimeout(() => { copyButton.textContent = "🔗"; }, 2000);
+      }).catch(() => {
+        // Fallback for browsers without clipboard API
+        const el = document.createElement("textarea");
+        el.value = copyText;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+        copyButton.textContent = "✓";
+        setTimeout(() => { copyButton.textContent = "🔗"; }, 2000);
+      });
+    });
 
     activitiesList.appendChild(activityCard);
   }
